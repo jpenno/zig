@@ -6,7 +6,7 @@
     //
     // It is redundant to include "zig" in this name because it is already
     // within the Zig package namespace.
-    .name = .template,
+    .name = .raylib_c,
 
     // This is a [Semantic Version](https://semver.org/).
     // In a future version of Zig it will be used for package deduplication.
@@ -24,7 +24,7 @@
     // original project's identity. Thus it is recommended to leave the comment
     // on the following line intact, so that it shows up in code reviews that
     // modify the field.
-    .fingerprint = 0x97601f83b0348f73, // Changing this has security and trust implications.
+    .fingerprint = 0x329c1e2e6777737a, // Changing this has security and trust implications.
 
     // Tracks the earliest Zig version that the package considers to be a
     // supported use case.
@@ -36,9 +36,9 @@
     // Once all dependencies are fetched, `zig build` no longer requires
     // internet connectivity.
     .dependencies = .{
-        .raylib_zig = .{
-            .url = "git+https://github.com/Not-Nik/raylib-zig?ref=zig-0.14#57a8a21b486af47d62cb8ce39a0c7902019a86d2",
-            .hash = "raylib_zig-5.6.0-dev-KE8RELUtBQD9ynf9BONdwukHlR4Ib8k_hZZUkqUPO7uJ",
+        .raylib = .{
+            .url = "git+https://github.com/raysan5/raylib.git#add4da8fb32fdd422201fb0b57329235c99f831d",
+            .hash = "raylib-5.5.0-whq8uKV0zQBqlO6I6eodSUsMeRngbFTt0pYX1z4OvDxO",
         },
     },
     .paths = .{

@@ -15,16 +15,6 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
-    const raylib_dep = b.dependency("raylib_zig", .{
-        .target = target,
-        .optimize = optimize,
-        .shared = true, // Build raylib as a shared library
-    });
-
-    const raylib = raylib_dep.module("raylib"); // main raylib module
-    const raygui = raylib_dep.module("raygui"); // raygui module
-    const raylib_artifact = raylib_dep.artifact("raylib"); // raylib C library
-
     // We will also create a module for our other entry point, 'main.zig'.
     const exe_mod = b.createModule(.{
         // `root_source_file` is the Zig "entry point" of the module. If a module
@@ -39,13 +29,16 @@ pub fn build(b: *std.Build) void {
     // This creates another `std.Build.Step.Compile`, but this one builds an executable
     // rather than a static library.
     const exe = b.addExecutable(.{
-        .name = "flappy-bird",
+        .name = "raylib_c",
         .root_module = exe_mod,
     });
 
-    exe.linkLibrary(raylib_artifact);
-    exe.root_module.addImport("raylib", raylib);
-    exe.root_module.addImport("raygui", raygui);
+    const raylib_dep = b.dependency("raylib", .{
+        .target = target,
+        .optimize = optimize,
+    });
+    const raylib = raylib_dep.artifact("raylib");
+    exe.linkLibrary(raylib);
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
