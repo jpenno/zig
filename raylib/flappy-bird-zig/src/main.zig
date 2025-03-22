@@ -14,7 +14,7 @@ pub fn main() anyerror!void {
     var pos = vec.Vec2F{ 100, 100 };
     // var pos = vec.Vec(2, f32){ 100, 100 };
     const dir = vec.Vec2F{ 1, 0 };
-    const speed: i32 = 300;
+    const speed: i32 = 500;
 
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
     defer rl.closeWindow(); // Close window and OpenGL context
