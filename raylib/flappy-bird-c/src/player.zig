@@ -9,8 +9,8 @@ pub const Player = struct {
     pos: Vec2F,
     size: Vec2F,
     velocity: Vec2F = Vec2F{ 0, 1 },
-    gravity: f32 = 2000,
-    jump_force: f32 = -600,
+    gravity: f32 = 2500,
+    jump_force: f32 = -800,
 
     pub fn init(pos: vec.Vec2F) Player {
         return .{
@@ -33,6 +33,7 @@ pub const Player = struct {
             p.pos[1] = 0;
             p.velocity[1] = 0;
         }
+
         if (p.pos[1] + p.size[1] >= @as(f32, @floatFromInt(rl.GetScreenHeight()))) {
             p.pos[1] = @as(f32, @floatFromInt(rl.GetScreenHeight())) - p.size[1];
             p.velocity[1] = 0;
