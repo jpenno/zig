@@ -13,14 +13,12 @@ pub const Pipe = struct {
     dir: Vec2F = Vec2F{ -1, 0 },
     speed: f32,
 
-    pub fn init() Pipe {
-        const posX: f32 = 500;
-
+    pub fn init(pos: rl.Vector2) Pipe {
         return .{
-            .pos = Vec2F{ 700, posX },
+            .pos = Vec2F{ pos.x, pos.y },
             .size = Vec2F{
-                25,
-                @as(f32, @floatFromInt(rl.GetScreenHeight())) + 50 - posX,
+                50,
+                @as(f32, @floatFromInt(rl.GetScreenHeight())) + 50 - pos.y,
             },
             .speed = 100,
         };
