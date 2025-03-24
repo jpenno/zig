@@ -10,7 +10,7 @@ pub const Player = struct {
     size: Vec2F,
     velocity: Vec2F = Vec2F{ 0, 1 },
     gravity: f32 = 2500,
-    jump_force: f32 = -800,
+    jump_force: f32 = -600,
 
     pub fn init(pos: vec.Vec2F) Player {
         return .{

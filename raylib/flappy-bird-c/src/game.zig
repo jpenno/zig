@@ -2,6 +2,7 @@ const std = @import("std");
 
 const Pipe = @import("pipe.zig").Pipe;
 const Player = @import("player.zig").Player;
+const Timer = @import("timer.zig").Timer;
 
 const rl = @cImport({
     @cInclude("raylib.h");
@@ -15,7 +16,8 @@ pub const Game = struct {
     };
 
     player: Player,
-    pipe: Pipe,
+    pipes: [20]Pipe = undefined,
+    pipe_spawn_timer: Timer,
     state: State,
 
     pub fn init() Game {
@@ -28,8 +30,8 @@ pub const Game = struct {
 
         return .{
             .player = Player.init(.{ 100, 100 }),
-            .pipe = Pipe.init(.{ .x = 700, .y = 300 }),
             .state = .Playing,
+            .pipe_spawn_timer = Timer.init(1.0),
         };
     }
 
@@ -59,7 +61,22 @@ pub const Game = struct {
     }
 
     fn updatePlaying(g: *Game, dt: f32) void {
-        g.pipe.update(dt);
+        if (g.pipe_spawn_timer.tick(dt)) {
+            const tmp = Pipe.spawnPar();
+
+            for (tmp) |t| {
+                for (&g.pipes) |*pipe| {
+                    if (pipe.active == false) {
+                        pipe.* = t;
+                        break;
+                    }
+                }
+            }
+        }
+        for (&g.pipes) |*pipe| {
+            pipe.update(dt);
+        }
+
         g.player.update(dt);
 
         g.collision();
@@ -68,7 +85,10 @@ pub const Game = struct {
     fn drawPlaying(g: Game) void {
         rl.ClearBackground(rl.SKYBLUE);
 
-        g.pipe.draw();
+        for (g.pipes) |pipe| {
+            pipe.draw();
+        }
+
         g.player.draw();
     }
 
@@ -85,27 +105,29 @@ pub const Game = struct {
 
     fn reset(g: *Game) void {
         g.player = Player.init(.{ 100, 100 });
-        g.pipe = Pipe.init(.{ .x = 700, .y = 300 });
+        g.pipes = undefined;
         g.state = .Playing;
     }
 
     fn collision(g: *Game) void {
-        if (rl.CheckCollisionRecs(
-            .{
-                .x = g.player.pos[0],
-                .y = g.player.pos[1],
-                .width = g.player.size[0],
-                .height = g.player.size[1],
-            },
-            .{
-                .x = g.pipe.pos[0],
-                .y = g.pipe.pos[1],
-                .width = g.pipe.size[0],
-                .height = g.pipe.size[1],
-            },
-        )) {
-            std.debug.print("Game Over\n", .{});
-            g.state = .GameOver;
+        for (g.pipes) |pipe| {
+            if (rl.CheckCollisionRecs(
+                .{
+                    .x = g.player.pos[0],
+                    .y = g.player.pos[1],
+                    .width = g.player.size[0],
+                    .height = g.player.size[1],
+                },
+                .{
+                    .x = pipe.pos[0],
+                    .y = pipe.pos[1],
+                    .width = pipe.size[0],
+                    .height = pipe.size[1],
+                },
+            )) {
+                std.debug.print("Game Over\n", .{});
+                g.state = .GameOver;
+            }
         }
     }
 };
