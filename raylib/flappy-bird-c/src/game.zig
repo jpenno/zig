@@ -1,3 +1,6 @@
+const std = @import("std");
+
+const Pipe = @import("pipe.zig").Pipe;
 const Player = @import("player.zig").Player;
 
 const rl = @cImport({
@@ -6,6 +9,7 @@ const rl = @cImport({
 
 pub const Game = struct {
     player: Player,
+    pipe: Pipe,
 
     pub fn init() Game {
         const screenWidth = 600;
@@ -14,8 +18,10 @@ pub const Game = struct {
         rl.InitWindow(screenWidth, screenHeight, "flappy bird");
 
         rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+
         return .{
             .player = Player.init(.{ 100, 100 }),
+            .pipe = Pipe.init(),
         };
     }
 
@@ -33,7 +39,29 @@ pub const Game = struct {
     }
 
     fn update(g: *Game, dt: f32) void {
+        g.pipe.update(dt);
         g.player.update(dt);
+
+        g.collision();
+    }
+
+    fn collision(g: *Game) void {
+        if (rl.CheckCollisionRecs(
+            .{
+                .x = g.player.pos[0],
+                .y = g.player.pos[1],
+                .width = g.player.size[0],
+                .height = g.player.size[1],
+            },
+            .{
+                .x = g.pipe.pos[0],
+                .y = g.pipe.pos[1],
+                .width = g.pipe.size[0],
+                .height = g.pipe.size[1],
+            },
+        )) {
+            std.debug.print("Game Over\n", .{});
+        }
     }
 
     fn draw(g: Game) void {
@@ -42,6 +70,7 @@ pub const Game = struct {
 
         rl.ClearBackground(rl.GRAY);
 
+        g.pipe.draw();
         g.player.draw();
     }
 };
