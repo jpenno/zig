@@ -34,11 +34,21 @@ pub const Pipe = struct {
     }
 
     pub fn spawnPar() [2]Pipe {
+        var seed: u64 = undefined;
+        std.posix.getrandom(std.mem.asBytes(&seed)) catch std.debug.print("carnt get seed", .{});
+        var prng = std.Random.DefaultPrng.init(seed);
+
+        const screen_pading: i32 = 100;
+        const gap: i32 = 300;
+        const max_height: i32 = rl.GetScreenHeight() - gap - screen_pading;
+        const rand_num: i32 = prng.random().intRangeAtMost(i32, screen_pading, max_height);
+        const pipe2_start: f32 = @floatFromInt(rand_num + gap);
+
         return [2]Pipe{
-            Pipe.init(.{ .x = 800, .y = 0 }, .{ .x = 50, .y = 100 }),
-            Pipe.init(.{ .x = 800, .y = 600 }, .{
+            Pipe.init(.{ .x = 800, .y = 0 }, .{ .x = 50, .y = @floatFromInt(rand_num) }),
+            Pipe.init(.{ .x = 800, .y = pipe2_start }, .{
                 .x = 50,
-                .y = @as(f32, @floatFromInt(rl.GetScreenHeight())) + 50 - 600,
+                .y = @as(f32, @floatFromInt(rl.GetScreenHeight())) + 50 - pipe2_start,
             }),
         };
     }

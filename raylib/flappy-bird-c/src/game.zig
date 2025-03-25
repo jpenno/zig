@@ -31,7 +31,7 @@ pub const Game = struct {
         return .{
             .player = Player.init(.{ 100, 100 }),
             .state = .Playing,
-            .pipe_spawn_timer = Timer.init(1.0),
+            .pipe_spawn_timer = Timer.init(1.5),
         };
     }
 
@@ -73,6 +73,7 @@ pub const Game = struct {
                 }
             }
         }
+
         for (&g.pipes) |*pipe| {
             pipe.update(dt);
         }
@@ -83,7 +84,7 @@ pub const Game = struct {
     }
 
     fn drawPlaying(g: Game) void {
-        rl.ClearBackground(rl.SKYBLUE);
+        rl.ClearBackground(rl.GRAY);
 
         for (g.pipes) |pipe| {
             pipe.draw();

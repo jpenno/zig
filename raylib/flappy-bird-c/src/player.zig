@@ -41,6 +41,6 @@ pub const Player = struct {
     }
 
     pub fn draw(p: Player) void {
-        rl.DrawRectangleV(vec.RlVec(p.pos), vec.RlVec(p.size), rl.LIME);
+        rl.DrawRectangleV(vec.RlVec(p.pos), vec.RlVec(p.size), rl.BLUE);
     }
 };
