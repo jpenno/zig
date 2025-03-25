@@ -1,0 +1,4 @@
+this is a test
+new line
+more text
+not in bin
