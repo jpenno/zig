@@ -38,17 +38,22 @@ pub const Pipe = struct {
         std.posix.getrandom(std.mem.asBytes(&seed)) catch std.debug.print("carnt get seed", .{});
         var prng = std.Random.DefaultPrng.init(seed);
 
-        const screen_pading: i32 = 100;
-        const gap: i32 = 300;
-        const max_height: i32 = rl.GetScreenHeight() - gap - screen_pading;
-        const rand_num: i32 = prng.random().intRangeAtMost(i32, screen_pading, max_height);
-        const pipe2_start: f32 = @floatFromInt(rand_num + gap);
+        const screen_height: f32 = @floatFromInt(rl.GetScreenHeight());
+        const screen_pading: f32 = 100;
+        const gap: f32 = 300;
+        const max_height: f32 = screen_height - gap - screen_pading;
+        const rand_num: f32 = @floatFromInt(prng.random().intRangeAtMost(
+            i32,
+            @intFromFloat(screen_pading),
+            @intFromFloat(max_height),
+        ));
+        const pipe2_start: f32 = rand_num + gap;
 
         return [2]Pipe{
-            Pipe.init(.{ .x = 800, .y = 0 }, .{ .x = 50, .y = @floatFromInt(rand_num) }),
+            Pipe.init(.{ .x = 800, .y = 0 }, .{ .x = 50, .y = rand_num }),
             Pipe.init(.{ .x = 800, .y = pipe2_start }, .{
                 .x = 50,
-                .y = @as(f32, @floatFromInt(rl.GetScreenHeight())) + 50 - pipe2_start,
+                .y = screen_height + 50.0 - pipe2_start,
             }),
         };
     }
