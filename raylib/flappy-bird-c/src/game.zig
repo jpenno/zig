@@ -91,6 +91,7 @@ pub const Game = struct {
         }
 
         g.player.draw();
+        g.player.drawScore();
     }
 
     fn updateGameOver(g: *Game) void {
@@ -111,7 +112,10 @@ pub const Game = struct {
     }
 
     fn collision(g: *Game) void {
-        for (g.pipes) |pipe| {
+        for (&g.pipes) |*pipe| {
+            if (pipe.active == false) continue;
+            if (pipe.scored) continue;
+
             if (rl.CheckCollisionRecs(
                 .{
                     .x = g.player.pos[0],
@@ -128,6 +132,12 @@ pub const Game = struct {
             )) {
                 std.debug.print("Game Over\n", .{});
                 g.state = .GameOver;
+                return;
+            }
+
+            if (pipe.pos[0] < g.player.pos[0]) {
+                pipe.scored = true;
+                g.player.score += 1;
             }
         }
     }

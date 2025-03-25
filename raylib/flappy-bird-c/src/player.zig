@@ -1,3 +1,5 @@
+const std = @import("std");
+
 const vec = @import("./math/vec.zig");
 const Vec2F = vec.Vec2F;
 
@@ -11,6 +13,7 @@ pub const Player = struct {
     velocity: Vec2F = Vec2F{ 0, 1 },
     gravity: f32 = 2500,
     jump_force: f32 = -600,
+    score: u8 = 0,
 
     pub fn init(pos: vec.Vec2F) Player {
         return .{
@@ -42,5 +45,18 @@ pub const Player = struct {
 
     pub fn draw(p: Player) void {
         rl.DrawRectangleV(vec.RlVec(p.pos), vec.RlVec(p.size), rl.BLUE);
+    }
+
+    pub fn drawScore(p: Player) void {
+        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        const allocator = gpa.allocator();
+        defer std.debug.assert(gpa.deinit() == .ok);
+
+        const text: []const u8 = std.fmt.allocPrint(allocator, "Score: {d}", .{p.score}) catch unreachable;
+        defer allocator.free(text);
+
+        const text_size = @divTrunc(rl.MeasureText(@ptrCast(text), 43), 2);
+
+        rl.DrawText(@ptrCast(text), @divTrunc(rl.GetScreenWidth(), 2) - text_size, 25, 42, rl.WHITE);
     }
 };

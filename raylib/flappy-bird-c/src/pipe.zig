@@ -13,6 +13,7 @@ pub const Pipe = struct {
     dir: Vec2F = Vec2F{ -1, 0 },
     speed: f32,
     active: bool,
+    scored: bool = false,
 
     pub fn init(pos: rl.Vector2, size: rl.Vector2) Pipe {
         return .{
