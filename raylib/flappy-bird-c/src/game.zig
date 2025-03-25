@@ -32,6 +32,7 @@ pub const Game = struct {
             .player = Player.init(.{ 100, 100 }),
             .state = .Playing,
             .pipe_spawn_timer = Timer.init(1.5),
+            .pipes = [_]Pipe{Pipe{}} ** 20,
         };
     }
 
@@ -81,6 +82,8 @@ pub const Game = struct {
         g.player.update(dt);
 
         g.collision();
+
+        if (g.player.dead) g.state = .GameOver;
     }
 
     fn drawPlaying(g: Game) void {
@@ -130,14 +133,14 @@ pub const Game = struct {
                     .height = pipe.size[1],
                 },
             )) {
-                std.debug.print("Game Over\n", .{});
-                g.state = .GameOver;
+                g.player.die();
                 return;
             }
 
             if (pipe.pos[0] < g.player.pos[0]) {
                 pipe.scored = true;
                 g.player.score += 1;
+                std.debug.print("player score up\n", .{});
             }
         }
     }

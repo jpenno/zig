@@ -13,7 +13,8 @@ pub const Player = struct {
     velocity: Vec2F = Vec2F{ 0, 1 },
     gravity: f32 = 2500,
     jump_force: f32 = -600,
-    score: u8 = 0,
+    score: u32 = 0,
+    dead: bool = false,
 
     pub fn init(pos: vec.Vec2F) Player {
         return .{
@@ -58,5 +59,32 @@ pub const Player = struct {
         const text_size = @divTrunc(rl.MeasureText(@ptrCast(text), 43), 2);
 
         rl.DrawText(@ptrCast(text), @divTrunc(rl.GetScreenWidth(), 2) - text_size, 25, 42, rl.WHITE);
+    }
+
+    pub fn die(p: *Player) void {
+        if (p.dead) return;
+
+        p.dead = true;
+
+        std.debug.print("get high scores\n", .{});
+        const path = "./data/highscores.txt";
+
+        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        const allocator = gpa.allocator();
+        defer std.debug.assert(gpa.deinit() == .ok);
+
+        const file = std.fs.cwd().openFile(path, .{}) catch |err| {
+            std.log.err("Failed to open file: {s}", .{@errorName(err)});
+            return;
+        };
+        defer file.close();
+
+        while (file.reader().readUntilDelimiterOrEofAlloc(allocator, '\n', std.math.maxInt(usize)) catch |err| {
+            std.log.err("Failed to read line: {s}", .{@errorName(err)});
+            return;
+        }) |line| {
+            defer allocator.free(line);
+            std.debug.print("highscores: {s}\n", .{line});
+        }
     }
 };

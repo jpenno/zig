@@ -8,11 +8,11 @@ const rl = @cImport({
 });
 
 pub const Pipe = struct {
-    pos: Vec2F,
-    size: Vec2F,
+    pos: Vec2F = .{ 900, 0 },
+    size: Vec2F = .{ 50, 50 },
     dir: Vec2F = Vec2F{ -1, 0 },
-    speed: f32,
-    active: bool,
+    speed: f32 = 200,
+    active: bool = false,
     scored: bool = false,
 
     pub fn init(pos: rl.Vector2, size: rl.Vector2) Pipe {
@@ -25,12 +25,16 @@ pub const Pipe = struct {
     }
 
     pub fn update(self: *Pipe, dt: f32) void {
+        if (self.active == false) return;
+
         self.pos += vec.scaleF(self.dir, self.speed * dt);
 
         if (self.pos[0] + self.size[0] < 0) self.active = false;
     }
 
     pub fn draw(self: Pipe) void {
+        if (self.active == false) return;
+
         rl.DrawRectangleV(vec.RlVec(self.pos), vec.RlVec(self.size), rl.GREEN);
     }
 
