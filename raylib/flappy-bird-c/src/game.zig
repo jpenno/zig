@@ -107,6 +107,8 @@ pub const Game = struct {
         rl.ClearBackground(rl.GRAY);
 
         g.player.drawHighScores();
+        rl.DrawText("Press \"space\" to restart", 20, 800, 42, rl.WHITE);
+        rl.DrawText("Press \"escape\" to exit", 20, 750, 42, rl.WHITE);
     }
 
     fn reset(g: *Game) void {
