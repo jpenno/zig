@@ -131,7 +131,7 @@ fn insertScore(highScores: [10]u32, score: u32) [10]u32 {
 test "insertScore" {
     const highScores = [10]u32{ 100, 80, 70, 65, 64, 40, 35, 33, 20, 0 };
     const want = [10]u32{ 100, 80, 76, 70, 65, 64, 40, 35, 33, 20 };
-    const score = 75;
+    const score = 76;
 
     const result = insertScore(highScores, score);
 
