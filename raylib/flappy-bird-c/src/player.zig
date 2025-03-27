@@ -67,7 +67,6 @@ pub const Player = struct {
 
         p.dead = true;
 
-        std.debug.print("get high scores\n", .{});
         const path = "./data/highscores.txt";
 
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -87,7 +86,6 @@ pub const Player = struct {
         }) |line| : (i += 1) {
             defer allocator.free(line);
             p.highScores[i] = std.fmt.parseInt(u32, line, 10) catch unreachable;
-            std.debug.print("highscores[{d}]: {d}\n", .{ i, p.highScores[i] });
         }
 
         std.mem.sort(u32, &p.highScores, {}, comptime std.sort.desc(u32));
@@ -119,7 +117,6 @@ fn insertScore(highScores: [10]u32, score: u32) [10]u32 {
         if (score > highScore) {
             result[j] = score;
             const tmp_slice = highScores[j..9];
-            std.debug.print("tmp slice: {any}\n", .{tmp_slice});
 
             for (tmp_slice, 0..) |ts, k| {
                 result[j + 1 + k] = ts;
