@@ -140,7 +140,6 @@ pub const Game = struct {
             if (pipe.pos[0] < g.player.pos[0]) {
                 pipe.scored = true;
                 g.player.score += 1;
-                std.debug.print("player score up\n", .{});
             }
         }
     }

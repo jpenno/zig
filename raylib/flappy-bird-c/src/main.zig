@@ -8,3 +8,7 @@ pub fn main() void {
 
     game.run();
 }
+
+test {
+    std.testing.refAllDecls(@This());
+}

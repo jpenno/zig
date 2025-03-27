@@ -15,6 +15,7 @@ pub const Player = struct {
     jump_force: f32 = -600,
     score: u32 = 0,
     dead: bool = false,
+    highScores: [10]u32 = undefined,
 
     pub fn init(pos: vec.Vec2F) Player {
         return .{
@@ -79,12 +80,63 @@ pub const Player = struct {
         };
         defer file.close();
 
+        var i: usize = 0;
         while (file.reader().readUntilDelimiterOrEofAlloc(allocator, '\n', std.math.maxInt(usize)) catch |err| {
             std.log.err("Failed to read line: {s}", .{@errorName(err)});
             return;
-        }) |line| {
+        }) |line| : (i += 1) {
             defer allocator.free(line);
-            std.debug.print("highscores: {s}\n", .{line});
+            p.highScores[i] = std.fmt.parseInt(u32, line, 10) catch unreachable;
+            std.debug.print("highscores[{d}]: {d}\n", .{ i, p.highScores[i] });
         }
+
+        std.mem.sort(u32, &p.highScores, {}, comptime std.sort.desc(u32));
+
+        const result = insertScore(p.highScores, p.score);
+
+        // Open the file for writing
+        const out_file = std.fs.cwd().createFile(path, .{}) catch unreachable;
+        defer out_file.close();
+
+        var data = std.ArrayList(u8).init(allocator);
+        defer data.deinit();
+
+        for (result) |high_score| {
+            var buf: [10]u8 = undefined;
+            const numAsString = std.fmt.bufPrint(&buf, "{}\n", .{high_score}) catch unreachable;
+            data.appendSlice(numAsString[0..]) catch unreachable;
+        }
+
+        // Write the data to the file
+        out_file.writeAll(data.items) catch unreachable;
     }
 };
+
+fn insertScore(highScores: [10]u32, score: u32) [10]u32 {
+    var result = [_]u32{0} ** 10;
+
+    for (highScores, 0..) |highScore, j| {
+        if (score > highScore) {
+            result[j] = score;
+            const tmp_slice = highScores[j..9];
+            std.debug.print("tmp slice: {any}\n", .{tmp_slice});
+
+            for (tmp_slice, 0..) |ts, k| {
+                result[j + 1 + k] = ts;
+            }
+            break;
+        }
+        result[j] = highScore;
+    }
+    return result;
+}
+
+test "insertScore" {
+    const highScores = [10]u32{ 100, 80, 70, 65, 64, 40, 35, 33, 20, 0 };
+    const want = [10]u32{ 100, 80, 76, 70, 65, 64, 40, 35, 33, 20 };
+    const score = 75;
+
+    const result = insertScore(highScores, score);
+
+    try std.testing.expectEqual(want, result);
+}

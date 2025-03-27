@@ -1,4 +1,10 @@
-this is a test
-new line
-more text
-not in bin
+10
+10
+8
+8
+6
+5
+4
+4
+2
+0
