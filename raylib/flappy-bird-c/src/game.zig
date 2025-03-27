@@ -104,8 +104,9 @@ pub const Game = struct {
     }
 
     fn drawGameOver(g: Game) void {
-        _ = g;
         rl.ClearBackground(rl.GRAY);
+
+        g.player.drawHighScores();
     }
 
     fn reset(g: *Game) void {

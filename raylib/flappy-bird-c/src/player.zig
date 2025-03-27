@@ -62,6 +62,30 @@ pub const Player = struct {
         rl.DrawText(@ptrCast(text), @divTrunc(rl.GetScreenWidth(), 2) - text_size, 25, 42, rl.WHITE);
     }
 
+    pub fn drawHighScores(p: Player) void {
+        var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+        const allocator = gpa.allocator();
+        defer std.debug.assert(gpa.deinit() == .ok);
+
+        var text: []const u8 = std.fmt.allocPrint(allocator, "Score: {}", .{p.score}) catch unreachable;
+
+        var text_size = @divTrunc(rl.MeasureText(@ptrCast(text), 43), 2);
+
+        rl.DrawText(@ptrCast(text), @divTrunc(rl.GetScreenWidth(), 2) - text_size, 25, 42, rl.WHITE);
+        allocator.free(text);
+
+        var text_y: i32 = 100;
+        for (p.highScores, 0..) |score, i| {
+            text = std.fmt.allocPrint(allocator, "Score {d}: {d}", .{ i, score }) catch unreachable;
+            defer allocator.free(text);
+
+            text_size = @divTrunc(rl.MeasureText(@ptrCast(text), 43), 2);
+
+            text_y += 42;
+            rl.DrawText(@ptrCast(text), @divTrunc(rl.GetScreenWidth(), 2) - text_size, text_y, 42, rl.WHITE);
+        }
+    }
+
     pub fn die(p: *Player) void {
         if (p.dead) return;
 
@@ -90,7 +114,7 @@ pub const Player = struct {
 
         std.mem.sort(u32, &p.highScores, {}, comptime std.sort.desc(u32));
 
-        const result = insertScore(p.highScores, p.score);
+        p.highScores = insertScore(p.highScores, p.score);
 
         // Open the file for writing
         const out_file = std.fs.cwd().createFile(path, .{}) catch unreachable;
@@ -99,7 +123,7 @@ pub const Player = struct {
         var data = std.ArrayList(u8).init(allocator);
         defer data.deinit();
 
-        for (result) |high_score| {
+        for (p.highScores) |high_score| {
             var buf: [10]u8 = undefined;
             const numAsString = std.fmt.bufPrint(&buf, "{}\n", .{high_score}) catch unreachable;
             data.appendSlice(numAsString[0..]) catch unreachable;
