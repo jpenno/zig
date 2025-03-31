@@ -15,7 +15,7 @@ pub const Player = struct {
     jump_force: f32 = -600,
     score: u32 = 0,
     dead: bool = false,
-    highScores: [10]u32 = undefined,
+    high_scores: [10]u32 = undefined,
 
     pub fn init(pos: vec.Vec2F) Player {
         return .{
@@ -75,7 +75,7 @@ pub const Player = struct {
         allocator.free(text);
 
         var text_y: i32 = 100;
-        for (p.highScores, 0..) |score, i| {
+        for (p.high_scores, 0..) |score, i| {
             text = std.fmt.allocPrint(allocator, "Score {d}: {d}", .{ i, score }) catch unreachable;
             defer allocator.free(text);
 
@@ -109,12 +109,12 @@ pub const Player = struct {
             return;
         }) |line| : (i += 1) {
             defer allocator.free(line);
-            p.highScores[i] = std.fmt.parseInt(u32, line, 10) catch unreachable;
+            p.high_scores[i] = std.fmt.parseInt(u32, line, 10) catch unreachable;
         }
 
-        std.mem.sort(u32, &p.highScores, {}, comptime std.sort.desc(u32));
+        std.mem.sort(u32, &p.high_scores, {}, comptime std.sort.desc(u32));
 
-        p.highScores = insertScore(p.highScores, p.score);
+        p.high_scores = insertScore(p.high_scores, p.score);
 
         // Open the file for writing
         const out_file = std.fs.cwd().createFile(path, .{}) catch unreachable;
@@ -123,7 +123,7 @@ pub const Player = struct {
         var data = std.ArrayList(u8).init(allocator);
         defer data.deinit();
 
-        for (p.highScores) |high_score| {
+        for (p.high_scores) |high_score| {
             var buf: [10]u8 = undefined;
             const numAsString = std.fmt.bufPrint(&buf, "{}\n", .{high_score}) catch unreachable;
             data.appendSlice(numAsString[0..]) catch unreachable;

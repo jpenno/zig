@@ -21,10 +21,10 @@ pub const Game = struct {
     state: State,
 
     pub fn init() Game {
-        const screenWidth = 600;
-        const screenHeight = 880;
+        const screen_width = 600;
+        const screen_height = 880;
 
-        rl.InitWindow(screenWidth, screenHeight, "flappy bird");
+        rl.InitWindow(screen_width, screen_height, "flappy bird");
 
         rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
