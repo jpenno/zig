@@ -1,7 +1,9 @@
 const std = @import("std");
-const stdout = std.io.getStdOut().writer();
 const loge = std.log.err;
 
+const store = @import("store.zig");
+
+const stdout = std.io.getStdOut().writer();
 pub const Todo = struct {
     const State = enum {
         Todo,
@@ -26,12 +28,14 @@ pub const Todo = struct {
     }
 
     pub fn print(self: Todo, allocator: std.mem.Allocator) void {
-        var string = std.ArrayList(u8).init(allocator);
+        const string = store.makeJson(allocator, self);
         defer string.deinit();
 
-        std.json.stringify(self, .{ .whitespace = .indent_2 }, string.writer()) catch unreachable;
-
-        stdout.print("{d}| {s} | {s}\n", .{ self.id, self.description, @tagName(self.state) }) catch unreachable;
-        stdout.print("json: \n{s}", .{string.items}) catch unreachable;
+        stdout.print(
+            "{d}| {s} | {s}\n",
+            .{ self.id, self.description, @tagName(self.state) },
+        ) catch |err| {
+            std.log.err("error printing todo: {}", .{err});
+        };
     }
 };
