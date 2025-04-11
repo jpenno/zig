@@ -52,7 +52,7 @@ pub fn makeStructArrayFromJson(
         []T,
         allocator,
         data,
-        .{ .allocate = .alloc_always },
+        .{},
     ) catch |err| {
         std.log.err("Pass json err: {}", .{err});
         return null;

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "description": "learn zig",
+    "state": "Todo",
+    "created_at": "",
+    "updated_at": ""
+  },
+  {
+    "id": 1,
+    "description": "make a todo app",
+    "state": "Todo",
+    "created_at": "",
+    "updated_at": ""
+  },
+  {
+    "id": 1,
+    "description": "learn zig",
+    "state": "Todo",
+    "created_at": "",
+    "updated_at": ""
+  }
+]

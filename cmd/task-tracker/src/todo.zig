@@ -27,12 +27,26 @@ pub const Todo = struct {
         };
     }
 
+    pub fn copy(allocator: std.mem.Allocator, todo: Todo) Todo {
+        return Todo{
+            .created_at = todo.created_at,
+            .updated_at = todo.updated_at,
+            .id = todo.id,
+            .state = todo.state,
+            .description = allocator.dupe(u8, todo.description) catch unreachable,
+        };
+    }
+
+    pub fn deinit(self: Todo, allocator: std.mem.Allocator) void {
+        allocator.free(self.description);
+    }
+
     pub fn print(self: Todo, allocator: std.mem.Allocator) void {
         const string = store.makeJson(allocator, self);
         defer string.deinit();
 
         stdout.print(
-            "{d}| {s} | {s}\n",
+            "{d}| {s} | {s}|\n",
             .{ self.id, self.description, @tagName(self.state) },
         ) catch |err| {
             std.log.err("error printing todo: {}", .{err});
