@@ -17,10 +17,10 @@ pub const Todo = struct {
     created_at: []u8,
     updated_at: []u8,
 
-    pub fn create(description: []u8) Todo {
+    pub fn create(allocator: std.mem.Allocator, description: []u8) Todo {
         return Todo{
             .id = 1,
-            .description = description,
+            .description = allocator.dupe(u8, description) catch unreachable,
             .state = .Todo,
             .created_at = "",
             .updated_at = "",

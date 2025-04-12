@@ -13,13 +13,14 @@
   - update id "update task"
 - delete
   - delete id
-- list all tasks
+- mark in progress
+  - mark-in-progress id
+- mark done
+  - mark-done id
+- list tasks
   - list
-- list all task that are done
   - list done
-- list all task that are not done
   - list todo
-- list all task that are in progress
   - list in-progress
 
 ## Task Properites

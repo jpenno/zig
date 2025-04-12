@@ -37,16 +37,24 @@ pub fn main() !void {
     switch (command) {
         .add => {
             if (args.len > 2) {
-                try app.todos.append(Todo.create(args[2]));
-                const string = store.makeJson(allocator, app.todos.items);
-                defer string.deinit();
-                store.save(string.items, path);
+                try app.todos.append(Todo.create(allocator, args[2]));
+
+                app.saveTodos(allocator, path);
             } else {
                 std.log.err("no task to add", .{});
             }
         },
         .delete => {
-            std.log.err("Not implemented: \"{s}\"", .{args[1]});
+            if (args.len > 2) {
+                const delete_id = try std.fmt.parseInt(usize, args[2], 10);
+                const deleted_todo = app.todos.swapRemove(delete_id - 1);
+                deleted_todo.print(allocator);
+                deleted_todo.deinit(allocator);
+
+                app.saveTodos(allocator, path);
+            } else {
+                std.log.err("need id to delete task", .{});
+            }
         },
         .list => {
             const stdout = std.io.getStdOut().writer();

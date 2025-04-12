@@ -1,21 +1,14 @@
 [
   {
     "id": 1,
-    "description": "learn zig",
+    "description": "fix todo list",
     "state": "Todo",
     "created_at": "",
     "updated_at": ""
   },
   {
-    "id": 1,
+    "id": 2,
     "description": "make a todo app",
-    "state": "Todo",
-    "created_at": "",
-    "updated_at": ""
-  },
-  {
-    "id": 1,
-    "description": "learn zig",
     "state": "Todo",
     "created_at": "",
     "updated_at": ""

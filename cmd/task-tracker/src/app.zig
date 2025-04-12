@@ -31,4 +31,14 @@ pub const App = struct {
         }
         self.todos.deinit();
     }
+
+    pub fn saveTodos(self: *App, allocator: std.mem.Allocator, path: []const u8) void {
+        for (self.todos.items, 1..) |*todo, i| {
+            todo.id = @intCast(i);
+        }
+
+        const string = Store.makeJson(allocator, self.todos.items);
+        defer string.deinit();
+        Store.save(string.items, path);
+    }
 };
