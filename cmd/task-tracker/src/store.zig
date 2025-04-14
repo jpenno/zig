@@ -1,4 +1,5 @@
 const std = @import("std");
+const testing = std.testing;
 
 pub fn save(data: []const u8, path: []const u8) void {
     const out_file = std.fs.cwd().createFile(path, .{}) catch |err| {
@@ -12,9 +13,11 @@ pub fn save(data: []const u8, path: []const u8) void {
     };
 }
 
-pub fn load(allocator: std.mem.Allocator, path: []const u8) []const u8 {
+pub fn load(allocator: std.mem.Allocator, path: []const u8) ![]const u8 {
     const file = std.fs.cwd().openFile(path, .{}) catch |err| {
-        std.log.err("Failed to open file: {s}", .{@errorName(err)});
+        if (err == std.fs.File.OpenError.FileNotFound) {
+            return err;
+        }
         unreachable;
     };
     defer file.close();
@@ -26,6 +29,8 @@ pub fn load(allocator: std.mem.Allocator, path: []const u8) []const u8 {
 
     return data;
 }
+
+test "load" {}
 
 pub fn makeJson(allocator: std.mem.Allocator, data: anytype) std.ArrayList(u8) {
     var string = std.ArrayList(u8).init(allocator);
@@ -48,15 +53,8 @@ pub fn makeStructArrayFromJson(
         return null;
     }
 
-    const todos = std.json.parseFromSlice(
-        []T,
-        allocator,
-        data,
-        .{},
-    ) catch |err| {
+    return std.json.parseFromSlice([]T, allocator, data, .{}) catch |err| {
         std.log.err("Pass json err: {}", .{err});
         return null;
     };
-
-    return todos;
 }

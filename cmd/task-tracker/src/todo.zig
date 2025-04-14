@@ -4,6 +4,7 @@ const loge = std.log.err;
 const store = @import("store.zig");
 
 const stdout = std.io.getStdOut().writer();
+
 pub const Todo = struct {
     const State = enum {
         Todo,
@@ -46,7 +47,7 @@ pub const Todo = struct {
         defer string.deinit();
 
         stdout.print(
-            "{d}| {s} | {s}|\n",
+            "{d: <2} | {s: <30} | {s}|\n",
             .{ self.id, self.description, @tagName(self.state) },
         ) catch |err| {
             std.log.err("error printing todo: {}", .{err});

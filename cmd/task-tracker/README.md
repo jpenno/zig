@@ -5,6 +5,14 @@
 - link to project
   - <https://roadmap.sh/projects/task-tracker>
 
+## todo
+
+- [ ] handle empty file
+- [ ] mark task in progress
+- [ ] mark task done
+- [ ] print task based on state
+- [ ] pretty prit tasks
+
 ## cmd
 
 - add
