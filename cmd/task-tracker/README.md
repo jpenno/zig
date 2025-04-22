@@ -7,9 +7,10 @@
 
 ## todo
 
-- [ ] handle empty file
-- [ ] mark task in progress
-- [ ] mark task done
+- [x] handle empty file
+- [x] mark task done
+- [x] mark task in progress
+- [ ] handel no id for task action
 - [ ] print task based on state
 - [ ] pretty prit tasks
 
@@ -22,9 +23,9 @@
 - delete
   - delete id
 - mark in progress
-  - mark-in-progress id
+  - progress id
 - mark done
-  - mark-done id
+  - done id
 - list tasks
   - list
   - list done

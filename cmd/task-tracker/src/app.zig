@@ -54,4 +54,11 @@ pub const App = struct {
         defer string.deinit();
         Store.save(string.items, path);
     }
+
+    pub fn updateState(app: *App, allocator: std.mem.Allocator, id: usize, state: Todo.State) void {
+        app.todos.items[id - 1].state = state;
+        app.todos.items[id - 1].print(allocator);
+
+        app.saveTodos(allocator, app.path);
+    }
 };

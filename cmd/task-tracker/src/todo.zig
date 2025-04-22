@@ -6,7 +6,7 @@ const store = @import("store.zig");
 const stdout = std.io.getStdOut().writer();
 
 pub const Todo = struct {
-    const State = enum {
+    pub const State = enum {
         Todo,
         In_progress,
         Done,
