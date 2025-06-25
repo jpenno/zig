@@ -1,15 +1,36 @@
 [
   {
     "id": 1,
-    "description": "fix todo list",
-    "state": "Todo",
+    "description": "go for a bike ride",
+    "state": "todo",
     "created_at": "",
     "updated_at": ""
   },
   {
     "id": 2,
-    "description": "make a todo app",
-    "state": "Todo",
+    "description": "go for a wallk",
+    "state": "done",
+    "created_at": "",
+    "updated_at": ""
+  },
+  {
+    "id": 3,
+    "description": "fix id error handling",
+    "state": "in_progress",
+    "created_at": "",
+    "updated_at": ""
+  },
+  {
+    "id": 4,
+    "description": "work on todo list app",
+    "state": "todo",
+    "created_at": "",
+    "updated_at": ""
+  },
+  {
+    "id": 5,
+    "description": "make coffee",
+    "state": "todo",
     "created_at": "",
     "updated_at": ""
   }

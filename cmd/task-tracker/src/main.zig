@@ -16,11 +16,6 @@ pub fn main() !void {
     };
     defer std.process.argsFree(allocator, args);
 
-    if (args.len < 2) {
-        std.log.err("no argument", .{});
-        return;
-    }
-
     const path = "./data/todos.json";
 
     var app = try App.init(allocator, path);
@@ -29,4 +24,8 @@ pub fn main() !void {
     const arg = if (args.len > 1) args[1..] else null;
 
     try Cmd.cmd(allocator, &app, arg);
+}
+
+test {
+    std.testing.refAllDecls(@This());
 }

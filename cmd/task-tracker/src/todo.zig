@@ -7,9 +7,10 @@ const stdout = std.io.getStdOut().writer();
 
 pub const Todo = struct {
     pub const State = enum {
-        Todo,
-        In_progress,
-        Done,
+        todo,
+        in_progress,
+        done,
+        invalid,
     };
 
     id: u32,
@@ -22,7 +23,7 @@ pub const Todo = struct {
         return Todo{
             .id = 1,
             .description = allocator.dupe(u8, description) catch unreachable,
-            .state = .Todo,
+            .state = .todo,
             .created_at = "",
             .updated_at = "",
         };
@@ -42,10 +43,7 @@ pub const Todo = struct {
         allocator.free(self.description);
     }
 
-    pub fn print(self: Todo, allocator: std.mem.Allocator) void {
-        const string = store.makeJson(allocator, self);
-        defer string.deinit();
-
+    pub fn print(self: Todo) void {
         stdout.print(
             "{d: <2} | {s: <30} | {s}|\n",
             .{ self.id, self.description, @tagName(self.state) },

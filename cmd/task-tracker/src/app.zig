@@ -45,6 +45,11 @@ pub const App = struct {
         self.todos.deinit();
     }
 
+    pub fn addToDo(self: *App, allocator: std.mem.Allocator, todo: Todo) void {
+        self.todos.append(todo) catch unreachable;
+        self.saveTodos(allocator, self.path);
+    }
+
     pub fn saveTodos(self: *App, allocator: std.mem.Allocator, path: []const u8) void {
         for (self.todos.items, 1..) |*todo, i| {
             todo.id = @intCast(i);
@@ -57,7 +62,7 @@ pub const App = struct {
 
     pub fn updateState(app: *App, allocator: std.mem.Allocator, id: usize, state: Todo.State) void {
         app.todos.items[id - 1].state = state;
-        app.todos.items[id - 1].print(allocator);
+        app.todos.items[id - 1].print();
 
         app.saveTodos(allocator, app.path);
     }

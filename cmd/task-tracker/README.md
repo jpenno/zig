@@ -10,8 +10,8 @@
 - [x] handle empty file
 - [x] mark task done
 - [x] mark task in progress
-- [ ] handel no id for task action
-- [ ] print task based on state
+- [x] handel no id for task action
+- [x] print task based on state
 - [ ] pretty prit tasks
 
 ## cmd
