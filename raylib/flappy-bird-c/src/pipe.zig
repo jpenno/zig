@@ -35,7 +35,13 @@ pub const Pipe = struct {
     pub fn draw(self: Pipe) void {
         if (self.active == false) return;
 
-        rl.DrawRectangleV(vec.RlVec(self.pos), vec.RlVec(self.size), rl.GREEN);
+        rl.DrawRectangleV(rl.Vector2{
+            .x = self.pos[0],
+            .y = self.pos[1],
+        }, rl.Vector2{
+            .x = self.size[0],
+            .y = self.size[1],
+        }, rl.GREEN);
     }
 
     pub fn spawnPar() [2]Pipe {
