@@ -21,8 +21,10 @@ pub const Game = struct {
     state: State,
 
     pub fn init() Game {
+        std.debug.print("test", .{});
         const screen_width = 600;
         const screen_height = 880;
+        std.debug.print("test", .{});
 
         rl.InitWindow(screen_width, screen_height, "flappy bird");
 

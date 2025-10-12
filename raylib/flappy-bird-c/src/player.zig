@@ -94,6 +94,7 @@ pub const Player = struct {
 
     pub fn die(p: *Player) void {
         if (p.dead) return;
+        rl.Vector2{ .y = 0, .x = 0 };
 
         p.dead = true;
 
