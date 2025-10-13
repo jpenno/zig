@@ -1,5 +1,6 @@
 const std = @import("std");
 const Board = @import("board.zig").Board;
+const Input_handler = @import("inputHandler.zig").Input_handler;
 
 pub fn main() !void {
     // set up output
@@ -12,39 +13,19 @@ pub fn main() !void {
     var stdin_reader_wrapper = std.fs.File.stdin().reader(&stdin_buffer);
     const reader: *std.Io.Reader = &stdin_reader_wrapper.interface;
 
+    var input_handler = Input_handler.Init(reader);
+
     var board = Board.Init();
 
-    while (reader.takeDelimiterExclusive('\n')) |line| {
-        // handel input
-        const input: usize = std.fmt.parseInt(usize, line, 10) catch |err| {
-            switch (err) {
-                error.InvalidCharacter => {
-                    if (std.mem.eql(u8, line, "quit")) {
-                        try stdout.print("quit game", .{});
-                        return;
-                    }
-                    try stdout.print("Please enter a valid number\n", .{});
-                    continue;
-                },
-                error.Overflow => {
-                    try stdout.print("Please enter a small positive number\n", .{});
-                    continue;
-                },
-            }
-        };
+    const move = try input_handler.GetInput();
 
-        // game logic
-        board.Move(input, 'x');
+    // game logic
+    board.Move(move, 'x');
 
-        // draw game
-        try stdout.print("\nInput: {}\n", .{input});
+    // draw game
+    try stdout.print("\nInput: {}\n", .{move});
 
-        board.Print(stdout);
+    board.Print(stdout);
 
-        try stdout.flush();
-    } else |err| switch (err) {
-        error.EndOfStream => {},
-        error.StreamTooLong => return err,
-        error.ReadFailed => return err,
-    }
+    try stdout.flush();
 }
