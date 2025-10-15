@@ -17,10 +17,14 @@ pub fn main() !void {
 
     var board = Board.Init();
 
+    try stdout.print("Enter a move: ", .{});
+    try stdout.flush();
+
     const move = try input_handler.GetInput();
 
     // game logic
     board.Move(move, 'x');
+    // board.CheckWin();
 
     // draw game
     try stdout.print("\nInput: {}\n", .{move});
@@ -28,4 +32,8 @@ pub fn main() !void {
     board.Print(stdout);
 
     try stdout.flush();
+}
+
+test {
+    std.testing.refAllDecls(@This());
 }

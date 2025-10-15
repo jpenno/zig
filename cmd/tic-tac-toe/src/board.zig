@@ -16,6 +16,11 @@ pub const Board = struct {
         return false;
     }
 
+    test "Check-win" {
+        var board = Init();
+        try std.testing.expectEqual(false, board.CheckWin());
+    }
+
     pub fn Print(board: *Board, stdout: *std.Io.Writer) void {
         for (board.board, 1..) |pos, i| {
             stdout.print("{c} ", .{pos}) catch unreachable;
